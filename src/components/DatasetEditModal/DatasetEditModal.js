@@ -8,9 +8,9 @@ import Typography from "@material-ui/core/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
-import {parseCsv} from "../../utils/csvParser";
-import {DistributionTable} from "../DistributionTable/DistributionTable";
+import {encodeCsv, parseCsv} from "../../utils/csvParser";
 import DistributionEditableTable from "../DistributionEditableTable";
+import {usePrevious} from "../../hooks/usePrevious";
 
 const useStyles = makeStyles((theme) => ({
     appBar: {
@@ -52,6 +52,8 @@ function TabPanel(props) {
 const DatasetEditModal = (props) => {
     const [dataset, setDataset] = React.useState(null);
     const [distributionTabIndex, setDistributionTabIndex] = React.useState(0);
+    const oldDistributionTabIndex = usePrevious(distributionTabIndex);
+    const [tableData, setTableData] = React.useState([]);
 
     const datasetId = props.datasetId;
     const isModalOpen = props.isModalOpen;
@@ -61,11 +63,22 @@ const DatasetEditModal = (props) => {
 
     React.useEffect(() => {
         if (datasetId && isModalOpen) {
-            getDataset(datasetId, false).then((result) => {
+            getDataset(datasetId).then((result) => {
                 setDataset(result.data.dataset);
             });
         }
     }, [datasetId, isModalOpen]);
+
+    React.useEffect(() => {
+        if (dataset) {
+            if (oldDistributionTabIndex) {
+                dataset.distributions[oldDistributionTabIndex].payload = encodeCsv(tableData);
+            }
+
+            const newTableData = parseCsv(dataset.distributions[distributionTabIndex].payload).data;
+            setTableData(newTableData);
+        }
+    }, [distributionTabIndex, dataset]);
 
     return (
         <Dialog
@@ -86,7 +99,7 @@ const DatasetEditModal = (props) => {
                     </Button>
                 </Toolbar>
             </AppBar>
-            {dataset && <List>
+            {!!dataset && <List>
                 {dataset.description_en &&
                 <ListItem button>
                     <ListItemText primary="Опис(АНГЛ)" secondary={dataset.description_en}/>
@@ -112,9 +125,10 @@ const DatasetEditModal = (props) => {
                     </AppBar>
                     {dataset.distributions.map((elem, index) => (
                         <TabPanel value={distributionTabIndex} index={index} key={index}>
-                            <DistributionTable
-                                data={parseCsv(elem.payload)}
-                            />
+                            {!!tableData.length && <DistributionEditableTable
+                                data={tableData}
+                                setData={setTableData}
+                            />}
                         </TabPanel>
                     ))}
                 </div>}

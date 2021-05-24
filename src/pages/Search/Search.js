@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchForm from "../../components/SearchForm";
-import {searchDatasets} from "../../api";
+import {supplierSearchDatasets} from "../../api";
 import DatasetList from "../../components/DatasetList";
 import {perPage} from "../../const/pagination";
 import DatasetModal from "../../components/DatasetModal";
@@ -29,14 +29,14 @@ const Search = () => {
         params.per_page = perPage;
         params.page = currentPage;
 
-        searchDatasets(params).then((result) => {
+        supplierSearchDatasets(params).then((result) => {
             setDatasets(result.data.dataset_collection)
             setDatasetsAmount(result.data.total_datasets_amount);
         });
     }
 
-    const handleDatasetClick = (datasetId) => {
-        setDatasetId(datasetId);
+    const handleDatasetClick = (dataset) => {
+        setDatasetId(dataset.external_id);
         setModalOpen(true);
     }
 

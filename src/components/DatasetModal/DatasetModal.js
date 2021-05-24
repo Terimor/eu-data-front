@@ -1,6 +1,6 @@
 import {AppBar, Box, Button, Dialog, ListItem, ListItemText, Tab, Tabs} from "@material-ui/core";
 import React from "react";
-import {getDataset} from "../../api";
+import {supplierGetDataset} from "../../api";
 import Toolbar from "@material-ui/core/Toolbar";
 import {makeStyles} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -59,12 +59,25 @@ const DatasetModal = (props) => {
     const classes = useStyles();
 
     React.useEffect(() => {
+        if (!isModalOpen) {
+            setDataset(null);
+            setDistributionTabIndex(0);
+        }
+    }, [isModalOpen]);
+
+    React.useEffect(() => {
         if (datasetId && isModalOpen) {
-            getDataset(datasetId, false).then((result) => {
+            supplierGetDataset(datasetId, false).then((result) => {
                 setDataset(result.data.dataset);
             });
         }
     }, [datasetId, isModalOpen]);
+
+    const handleImport = () => {
+        supplierGetDataset(datasetId, true).then(() => {
+            setModalOpen(false);
+        });
+    };
 
     return (
         <Dialog
@@ -117,6 +130,9 @@ const DatasetModal = (props) => {
                         </TabPanel>
                     ))}
                 </div>}
+                <Box p={5}>
+                    <Button variant="contained" color="primary" onClick={handleImport}>Імпорт</Button>
+                </Box>
             </List>}
         </Dialog>
     );

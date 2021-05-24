@@ -7,7 +7,7 @@ const Dataset = (props) => {
     const dataset = props.dataset;
 
     return (
-        <Paper style={{padding: 10, marginTop: 20, cursor: "pointer"}} onClick={() => props.onClick(dataset.external_id)}>
+        <Paper style={{padding: 10, marginTop: 20, cursor: "pointer"}} onClick={() => props.onClick(dataset)}>
             <List>
                 <ListItem button>
                     <ListItemText primary="Країна" secondary={dataset.country_code}/>
