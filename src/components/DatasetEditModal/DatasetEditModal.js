@@ -77,7 +77,7 @@ const DatasetEditModal = (props) => {
     }, [datasetId, isModalOpen]);
 
     React.useEffect(() => {
-        if (dataset) {
+        if (dataset && dataset.distributions.length) {
             if (oldDistributionTabIndex) {
                 dataset.distributions[oldDistributionTabIndex].payload = encodeCsv(tableData);
             }
