@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button, MenuItem, Paper, TextField} from "@material-ui/core";
+import {Box, Button, MenuItem, Paper, TextField} from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 
 const dataScopes = [
@@ -36,27 +36,30 @@ const SearchForm = (props) => {
     return (
         <Paper style={{padding: 20}}>
             <form noValidate autoComplete="off">
-                <TextField
-                    required
-                    label="Шаблон пошуку"
-                    value={searchPattern}
-                    onChange={(event) => setSearchPattern(event.target.value)}
-                />
-                <TextField
-                    select
-                    label="Контекст даних"
-                    value={dataScope}
-                    onChange={(event) => setDataScope(event.target.value)}
-                >
-                    {dataScopes.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <Button variant="contained" color="primary" onClick={onSubmit}>
-                    Пошук <SearchIcon/>
-                </Button>
+                <Box display="flex" justifyContent="space">
+                    <TextField
+                        required
+                        label="Шаблон пошуку"
+                        value={searchPattern}
+                        onChange={(event) => setSearchPattern(event.target.value)}
+                    />
+                    <TextField
+                        select
+                        label="Контекст даних"
+                        value={dataScope}
+                        onChange={(event) => setDataScope(event.target.value)}
+                        style={{minWidth: 150}}
+                    >
+                        {dataScopes.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                    <Button variant="contained" color="primary" onClick={onSubmit} style={{marginLeft: 20}}>
+                        Пошук <SearchIcon/>
+                    </Button>
+                </Box>
             </form>
         </Paper>
     );

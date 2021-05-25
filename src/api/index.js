@@ -25,3 +25,8 @@ export const getDatasets = () => {
 export const getDataset = (id) => {
     return axios.get(url(`/api/datasets/${id}`));
 }
+
+export const updateDataset = (dataset) => {
+    console.log(dataset);
+    return axios.put(url(`/api/datasets`), {dataset: dataset});
+}

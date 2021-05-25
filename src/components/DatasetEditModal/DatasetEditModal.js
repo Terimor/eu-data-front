@@ -1,6 +1,6 @@
 import {AppBar, Box, Button, Dialog, ListItem, ListItemText, Tab, Tabs} from "@material-ui/core";
 import React from "react";
-import {getDataset} from "../../api";
+import {getDataset, updateDataset} from "../../api";
 import Toolbar from "@material-ui/core/Toolbar";
 import {makeStyles} from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
@@ -60,6 +60,13 @@ const DatasetEditModal = (props) => {
     const setModalOpen = props.setModalOpen;
 
     const classes = useStyles();
+
+    const handleSave = () => {
+        dataset.distributions[oldDistributionTabIndex].payload = encodeCsv(tableData);
+        updateDataset(dataset).then(() => {
+            setModalOpen(false);
+        });
+    };
 
     React.useEffect(() => {
         if (datasetId && isModalOpen) {
@@ -132,6 +139,9 @@ const DatasetEditModal = (props) => {
                         </TabPanel>
                     ))}
                 </div>}
+                <Box p={5} display="flex" justifyContent="flex-end">
+                    <Button variant="contained" color="primary" onClick={handleSave}>Зберегти</Button>
+                </Box>
             </List>}
         </Dialog>
     );
